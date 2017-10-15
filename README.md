@@ -1,4 +1,4 @@
-# PageLayoutManager
+# PagerLayoutManager
 
 具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，并不能适用于所有场景，请选择性使用。
 
