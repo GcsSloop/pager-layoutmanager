@@ -6,8 +6,8 @@
 
 ## 1. 效果预览
 
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcpnh4wzg308c0ep1kz.gif)
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcq86gyqg308c0epb2a.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcwxgzzxg308c0epkjl.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcxtsxi2g308c0epb29.gif)
 
 ## 2. 支持的特性
 
