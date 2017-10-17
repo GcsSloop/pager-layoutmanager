@@ -108,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     }
 
     public void removeOne(View view) {
-        mAdapter.data.remove(0);
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter.data.size() > 0) {
+            mAdapter.data.remove(0);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void addMore(View view) {
