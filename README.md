@@ -114,7 +114,10 @@ allprojects {
 在需要添加依赖的 Module 下添加以下信息，使用方式和普通的远程仓库一样。
 
 ```groovy
+// 1.x
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
+// 2.x
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.1.0@aar'
 ```
 
 ## 7. 待优化
@@ -131,6 +134,16 @@ compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.1.0
+
+修复从后向前滚动时内存占用变大的问题。
+
+(产生原因时先添加了新的View，最后再回收废弃的View，导致被回收的View一直难以被复用，持续占用内存，正确的应该是先将废弃的View放入回收区，这样新View创建时直接从回收区取View，就避免了回收区堆积大量的废弃View。)
+
+#### v2.0.0
+
+统一包名(功能没有变化)。
 
 #### v1.3.1
 

@@ -175,7 +175,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         }
 
         // 回收和填充布局
-        recycleAndFillItems(recycler, state);
+        recycleAndFillItems(recycler, state, true);
     }
 
     /**
@@ -196,8 +196,10 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @param recycler Recycler
      * @param state    State
+     * @param isStart 是否从头开始，用于控制View遍历方向，true 为从头到尾，false 为从尾到头
      */
-    private void recycleAndFillItems(RecyclerView.Recycler recycler, RecyclerView.State state) {
+    private void recycleAndFillItems(RecyclerView.Recycler recycler, RecyclerView.State state,
+                                     boolean isStart) {
         if (state.isPreLayout()) {
             return;
         }
@@ -234,7 +236,6 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
             }
         }
 
-
         Loge("displayRect = " + displayRect.toString());
 
         int startPos = 0;                  // 获取第一个条目的Pos
@@ -255,23 +256,33 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
 
         detachAndScrapAttachedViews(recycler); // 移除所有View
 
-        for (int i = startPos; i < stopPos; i++) {
-            View child = recycler.getViewForPosition(i);
-            Rect rect = getItemFrameByPosition(i);
-            if (!Rect.intersects(displayRect, rect)) {
-                removeAndRecycleView(child, recycler);   // 回收入暂存区
-            } else {
-                addView(child);
-                measureChildWithMargins(child, mWidthUsed, mHeightUsed);
-                RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
-                layoutDecorated(child,
-                                rect.left - mOffsetX + lp.leftMargin,
-                                rect.top - mOffsetY + lp.topMargin,
-                                rect.right - mOffsetX - lp.rightMargin,
-                                rect.bottom - mOffsetY - lp.bottomMargin);
+        if (isStart) {
+            for (int i = startPos; i < stopPos; i++) {
+                addOrRemove(recycler, displayRect, i);
+            }
+        } else {
+            for (int i = stopPos - 1; i >= startPos; i--) {
+                addOrRemove(recycler, displayRect, i);
             }
         }
         Loge("child count = " + getChildCount());
+    }
+
+    private void addOrRemove(RecyclerView.Recycler recycler, Rect displayRect, int i) {
+        View child = recycler.getViewForPosition(i);
+        Rect rect = getItemFrameByPosition(i);
+        if (!Rect.intersects(displayRect, rect)) {
+            removeAndRecycleView(child, recycler);   // 回收入暂存区
+        } else {
+            addView(child);
+            measureChildWithMargins(child, mWidthUsed, mHeightUsed);
+            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
+            layoutDecorated(child,
+                            rect.left - mOffsetX + lp.leftMargin,
+                            rect.top - mOffsetY + lp.topMargin,
+                            rect.right - mOffsetX - lp.rightMargin,
+                            rect.bottom - mOffsetY - lp.bottomMargin);
+        }
     }
 
     //--- 处理滚动 ----------------------------------------------------------------------------------
@@ -297,7 +308,11 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         mOffsetX += result;
         setPageChangedByOffset(mOffsetX);
         offsetChildrenHorizontal(-result);
-        recycleAndFillItems(recycler, state);
+        if (result > 0) {
+            recycleAndFillItems(recycler, state, true);
+        } else {
+            recycleAndFillItems(recycler, state, false);
+        }
         return result;
     }
 
@@ -322,7 +337,11 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         mOffsetY += result;
         setPageChangedByOffset(mOffsetY);
         offsetChildrenVertical(-result);
-        recycleAndFillItems(recycler, state);
+        if (result > 0) {
+            recycleAndFillItems(recycler, state, true);
+        } else {
+            recycleAndFillItems(recycler, state, false);
+        }
         return result;
     }
 
