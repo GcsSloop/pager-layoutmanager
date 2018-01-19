@@ -702,9 +702,11 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * @param pageCount 页面总数
      */
     private void setPageCount(int pageCount) {
-        if (pageCount >= 0 && pageCount != mLastPageCount && mPageListener != null) {
-            mPageListener.onPageSizeChanged(pageCount);
+        if (pageCount >= 0 && pageCount != mLastPageCount) {
             mLastPageCount = pageCount;
+            if( mPageListener != null){
+                mPageListener.onPageSizeChanged(pageCount);
+            }
         }
     }
 
@@ -718,10 +720,12 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         Loge("setPageIndex = " + pageIndex + ":" + isScrolling);
         if (isScrolling && !mChangeSelectInScrolling) return;
         if (isScrolling && pageIndex == mLastPageIndex) return;
-        if (pageIndex >= 0 && mPageListener != null) {
-            mPageListener.onPageSelect(pageIndex);
+        if (pageIndex >= 0) {
             mCurrentPageIndex = pageIndex;
             mLastPageIndex = pageIndex;
+            if(mPageListener != null) {
+                mPageListener.onPageSelect(pageIndex);
+            }
         }
     }
 
