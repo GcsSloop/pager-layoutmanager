@@ -117,12 +117,12 @@ allprojects {
 // 1.x
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.1.0@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.0@aar'
 ```
 
 ## 7. 待优化
 
-- [ ] 添加 scrollToPosition。
+- [x] 添加 scrollToPosition。
 - [ ] 添加设置滚动速度。
 
 ## 作者简介
@@ -135,6 +135,20 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.1.0@aar'
 
 ## 更新日志
 
+#### v2.2.0
+
+新增方法：
+
+```java
+// 滚动到指定条目
+public void scrollToPosition(int position);
+// 滚动到指定页面
+public void scrollToPage(int pageIndex);
+// 上一页
+public void prePage();
+// 下一页
+public void nextPage();
+```
 #### v2.1.0
 
 修复从后向前滚动时内存占用变大的问题。

@@ -22,6 +22,7 @@
 
 package com.gcssloop.pagelayoutmanager;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
         mAdapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("WrongConstant")
     @Override public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         int type = -1;
         if (checkedId == R.id.type_horizontal) {
@@ -134,5 +136,13 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
         }
 
         Log.i("GCST", "type == " + type);
+    }
+
+    public void prePage(View view) {
+        mLayoutManager.prePage();
+    }
+
+    public void nextPage(View view) {
+        mLayoutManager.nextPage();
     }
 }

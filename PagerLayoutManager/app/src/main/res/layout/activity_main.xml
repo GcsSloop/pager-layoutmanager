@@ -158,5 +158,27 @@
             android:layout_height="wrap_content"
             android:onClick="addMore"
             android:text="追加5条"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="prePage"
+                android:text="上一页"/>
+
+            <Button
+                style="@style/Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="nextPage"
+                android:text="下一页"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

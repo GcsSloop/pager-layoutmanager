@@ -26,6 +26,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -104,6 +105,12 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         Logi("Item onLayoutChildren");
+        Logi("Item onLayoutChildren isPreLayout = " + state.isPreLayout());
+        Logi("Item onLayoutChildren isMeasuring = " + state.isMeasuring());
+        Logi("Item onLayoutChildren state = " + state);
+
+        // 如果是 preLayout 则不重新布局
+        // TODO 此处移除到结构检测 (state.isPreLayout() || !state.didStructureChange())
         if (state.isPreLayout()) {
             return;
         }
@@ -183,7 +190,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @param state State
      */
-    @Override public void onLayoutCompleted(RecyclerView.State state) {
+    @Override
+    public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
         if (state.isPreLayout()) return;
         // 页面状态回调
@@ -196,7 +204,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @param recycler Recycler
      * @param state    State
-     * @param isStart 是否从头开始，用于控制View遍历方向，true 为从头到尾，false 为从尾到头
+     * @param isStart  是否从头开始，用于控制View遍历方向，true 为从头到尾，false 为从尾到头
      */
     private void recycleAndFillItems(RecyclerView.Recycler recycler, RecyclerView.State state,
                                      boolean isStart) {
@@ -240,7 +248,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
 
         int startPos = 0;                  // 获取第一个条目的Pos
         if (getChildCount() > 0) {
-            startPos = getPosition(getChildAt(0));
+            startPos = mLastPageIndex * mOnePageSize;
+            Logi("startPos = " + startPos);
             startPos = startPos - mOnePageSize * 2;
             if (startPos < 0) {
                 startPos = 0;
@@ -278,10 +287,10 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
             measureChildWithMargins(child, mWidthUsed, mHeightUsed);
             RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
             layoutDecorated(child,
-                            rect.left - mOffsetX + lp.leftMargin,
-                            rect.top - mOffsetY + lp.topMargin,
-                            rect.right - mOffsetX - lp.rightMargin,
-                            rect.bottom - mOffsetY - lp.bottomMargin);
+                    rect.left - mOffsetX + lp.leftMargin,
+                    rect.top - mOffsetY + lp.topMargin,
+                    rect.right - mOffsetX - lp.rightMargin,
+                    rect.bottom - mOffsetY - lp.bottomMargin);
         }
     }
 
@@ -350,7 +359,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @param state 滚动状态
      */
-    @Override public void onScrollStateChanged(int state) {
+    @Override
+    public void onScrollStateChanged(int state) {
         Logi("onScrollStateChanged = " + state);
         mScrollState = state;
         super.onScrollStateChanged(state);
@@ -521,9 +531,10 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @return 默认布局参数
      */
-    @Override public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+    @Override
+    public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                                             ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     /**
@@ -531,7 +542,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @return true 是，false 不是。
      */
-    @Override public boolean canScrollHorizontally() {
+    @Override
+    public boolean canScrollHorizontally() {
         return mOrientation == HORIZONTAL;
     }
 
@@ -540,7 +552,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @return true 是，false 不是。
      */
-    @Override public boolean canScrollVertically() {
+    @Override
+    public boolean canScrollVertically() {
         return mOrientation == VERTICAL;
     }
 
@@ -551,7 +564,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * @param targetPosition 目标控件
      * @return 需要滚动的距离
      */
-    @Override public PointF computeScrollVectorForPosition(int targetPosition) {
+    @Override
+    public PointF computeScrollVectorForPosition(int targetPosition) {
         Loge("computeScrollVectorForPosition targetPos = " + targetPosition);
         int[] pos = getPageLeftTopByPosition(targetPosition);
         Loge("computeScrollVectorForPosition pos = " + pos[0] + ":" + pos[1]);
@@ -567,7 +581,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @return 第一个搞条目的位置
      */
-    public int findNextPageFirstPos() {
+    int findNextPageFirstPos() {
         int page = mCurrentPageIndex;
         page++;
         if (page >= getTotalPageCount()) {
@@ -582,7 +596,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @return 第一个条目的位置
      */
-    public int findPrePageFirstPos() {
+    int findPrePageFirstPos() {
         // 在获取时由于前一页的View预加载出来了，所以获取到的直接就是前一页
         int page = mCurrentPageIndex;
         Loge("computeScrollVectorForPosition pre = " + page);
@@ -620,7 +634,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      *
      * @param pos 下标
      */
-    public int[] getSnapOffset(int pos) {
+    int[] getSnapOffset(int pos) {
         int[] offset = new int[2];
         if (getChildCount() <= 0) {
             offset[0] = 0;
@@ -759,6 +773,65 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         mMaxScrollX = my / getUsableHeight() * getUsableWidth();
         mMaxScrollY = mx / getUsableWidth() * getUsableHeight();
         return mOrientation;
+    }
+
+    //--- 滚动到指定位置 -----------------------------------------------------------------------------
+
+    /**
+     * 滚动到指定条目
+     *
+     * @param position 条目位置
+     */
+    @Override
+    public void scrollToPosition(int position) {
+        if (position < 0 || position >= getItemCount()) {
+            Log.e(TAG, "position = " + position + " is out of bounds, mast in [0, " + getItemCount() + ")");
+            return;
+        }
+        int pageIndex = position / mOnePageSize;
+        scrollToPage(pageIndex);
+    }
+
+    /**
+     * 滚动到指定页面
+     *
+     * @param pageIndex 页面下标
+     */
+    public void scrollToPage(int pageIndex) {
+        if (pageIndex < 0 || pageIndex >= mLastPageCount) {
+            Log.e(TAG, "pageIndex = " + pageIndex + " is out of bounds, mast in [0, " + mLastPageCount + ")");
+            return;
+        }
+
+        if (canScrollVertically()) {
+            mOffsetY = pageIndex * getUsableHeight();
+        } else {
+            mOffsetX = pageIndex * getUsableWidth();
+        }
+        setPageIndex(pageIndex, false);
+        requestLayout();
+    }
+
+    /**
+     * 上一页
+     */
+    public void prePage() {
+        int pageIndex = --mLastPageIndex;
+        pageIndex = pageIndex < 0 ? 0 : pageIndex;
+        scrollToPage(pageIndex);
+        setPageIndex(pageIndex, false);
+        requestLayout();
+    }
+
+    /**
+     * 下一页
+     */
+    public void nextPage() {
+        int pageIndex = ++mLastPageIndex;
+        pageIndex = pageIndex >= mLastPageCount ? mLastPageCount : pageIndex;
+        scrollToPage(pageIndex);
+        setPageIndex(pageIndex, false);
+        requestLayout();
     }
 
     //--- 对外接口 ----------------------------------------------------------------------------------
