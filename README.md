@@ -175,7 +175,7 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.1@aar'
 修复不设置页面监听器会导致显示不正常的问题。
 修复行列为1时滚动出现的问题。
 
-#### v2.2.0
+#### v2.2.0(该版本不稳定)
 
 新增方法：
 
