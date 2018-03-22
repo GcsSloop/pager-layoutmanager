@@ -535,11 +535,17 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
     private int getPageIndexByOffset() {
         int pageIndex = 0;
         if (canScrollVertically()) {
-            Logi("getPageIndexByOffset mOffsetY" + mOffsetY + "getUsableHeight" + getUsableHeight());
-            pageIndex = mOffsetY / getUsableHeight();
+            if (mOffsetY <= 0 || getUsableHeight()<=0){
+                pageIndex = 0;
+            } else {
+                pageIndex = mOffsetY / getUsableHeight();
+            }
         } else {
-            Logi("getPageIndexByOffset mOffsetX" + mOffsetY + "getUsableWidth" + getUsableWidth());
-            pageIndex = mOffsetX / getUsableWidth();
+            if (mOffsetX <=0 || getUsableWidth()<=0){
+                pageIndex = 0;
+            } else {
+                pageIndex = mOffsetX / getUsableWidth();
+            }
         }
         Logi("getPageIndexByOffset pageIndex = " + pageIndex);
         return pageIndex;

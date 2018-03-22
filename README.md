@@ -150,7 +150,7 @@ allprojects {
 // 1.x
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.1@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.2@aar'
 ```
 
 ## 7. 待优化
@@ -167,6 +167,10 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.1@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.2.2
+
+修复除零异常。
 
 #### v2.2.1
 
