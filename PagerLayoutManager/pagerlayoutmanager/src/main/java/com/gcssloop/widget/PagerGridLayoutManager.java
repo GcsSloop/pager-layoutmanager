@@ -26,7 +26,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -110,7 +109,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         Logi("Item onLayoutChildren state = " + state);
 
         // 如果是 preLayout 则不重新布局
-        // TODO 此处移除到结构检测 (state.isPreLayout() || !state.didStructureChange())
+        // TODO 此处移除了结构检测 (state.isPreLayout() || !state.didStructureChange())
         if (state.isPreLayout()) {
             return;
         }
@@ -122,6 +121,9 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
             setPageIndex(0, false);
             mCurrentPageIndex = 0;
             return;
+        } else {
+            setPageCount(getTotalPageCount());
+            setPageIndex(getPageIndexByOffset(), false);
         }
 
         // 计算页面数量
@@ -173,12 +175,14 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
             getItemFrameByPosition(i);
         }
 
-        // 预存储View
-        for (int i = 0; i < mOnePageSize; i++) {
-            if (i >= getItemCount()) break; // 防止数据过少时导致数组越界异常
-            View view = recycler.getViewForPosition(i);
-            addView(view);
-            measureChildWithMargins(view, mWidthUsed, mHeightUsed);
+        if (mOffsetX == 0 && mOffsetY == 0) {
+            // 预存储View
+            for (int i = 0; i < mOnePageSize; i++) {
+                if (i >= getItemCount()) break; // 防止数据过少时导致数组越界异常
+                View view = recycler.getViewForPosition(i);
+                addView(view);
+                measureChildWithMargins(view, mWidthUsed, mHeightUsed);
+            }
         }
 
         // 回收和填充布局
@@ -247,13 +251,12 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         Loge("displayRect = " + displayRect.toString());
 
         int startPos = 0;                  // 获取第一个条目的Pos
-        if (getChildCount() > 0) {
-            startPos = mLastPageIndex * mOnePageSize;
-            Logi("startPos = " + startPos);
-            startPos = startPos - mOnePageSize * 2;
-            if (startPos < 0) {
-                startPos = 0;
-            }
+        int pageIndex = getPageIndexByOffset();
+        startPos = pageIndex * mOnePageSize;
+        Logi("startPos = " + startPos);
+        startPos = startPos - mOnePageSize * 2;
+        if (startPos < 0) {
+            startPos = 0;
         }
         int stopPos = startPos + mOnePageSize * 4;
         if (stopPos > getItemCount()) {
@@ -524,6 +527,24 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         return pos / mOnePageSize;
     }
 
+    /**
+     * 根据 offset 获取页面Index
+     *
+     * @return 页面 Index
+     */
+    private int getPageIndexByOffset() {
+        int pageIndex = 0;
+        if (canScrollVertically()) {
+            Logi("getPageIndexByOffset mOffsetY" + mOffsetY + "getUsableHeight" + getUsableHeight());
+            pageIndex = mOffsetY / getUsableHeight();
+        } else {
+            Logi("getPageIndexByOffset mOffsetX" + mOffsetY + "getUsableWidth" + getUsableWidth());
+            pageIndex = mOffsetX / getUsableWidth();
+        }
+        Logi("getPageIndexByOffset pageIndex = " + pageIndex);
+        return pageIndex;
+    }
+
     //--- 公开方法 ----------------------------------------------------------------------------------
 
     /**
@@ -582,7 +603,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * @return 第一个搞条目的位置
      */
     int findNextPageFirstPos() {
-        int page = mCurrentPageIndex;
+        int page = getPageIndexByOffset();
         page++;
         if (page >= getTotalPageCount()) {
             page = getTotalPageCount();
@@ -598,7 +619,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      */
     int findPrePageFirstPos() {
         // 在获取时由于前一页的View预加载出来了，所以获取到的直接就是前一页
-        int page = mCurrentPageIndex;
+        int page = getPageIndexByOffset();
         Loge("computeScrollVectorForPosition pre = " + page);
         if (page < 0) {
             page = 0;
@@ -716,11 +737,11 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * @param pageCount 页面总数
      */
     private void setPageCount(int pageCount) {
-        if (pageCount >= 0 && pageCount != mLastPageCount) {
-            mLastPageCount = pageCount;
-            if( mPageListener != null){
+        if (pageCount >= 0) {
+            if (mPageListener != null && pageCount != mLastPageCount) {
                 mPageListener.onPageSizeChanged(pageCount);
             }
+            mLastPageCount = pageCount;
         }
     }
 
@@ -737,8 +758,9 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
         if (pageIndex >= 0) {
             mCurrentPageIndex = pageIndex;
             mLastPageIndex = pageIndex;
-            if(mPageListener != null) {
+            if (null != mPageListener) {
                 mPageListener.onPageSelect(pageIndex);
+
             }
         }
     }
@@ -816,7 +838,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * 上一页
      */
     public void prePage() {
-        int pageIndex = --mLastPageIndex;
+        int pageIndex = getPageIndexByOffset() - 1;
         pageIndex = pageIndex < 0 ? 0 : pageIndex;
         scrollToPage(pageIndex);
         setPageIndex(pageIndex, false);
@@ -827,7 +849,7 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
      * 下一页
      */
     public void nextPage() {
-        int pageIndex = ++mLastPageIndex;
+        int pageIndex = getPageIndexByOffset() + 1;
         pageIndex = pageIndex >= mLastPageCount ? mLastPageCount : pageIndex;
         scrollToPage(pageIndex);
         setPageIndex(pageIndex, false);

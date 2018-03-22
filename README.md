@@ -47,6 +47,9 @@ recyclerView.setLayoutManager(layoutManager);
 // 2.设置滚动辅助工具
 PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
 pageSnapHelper.attachToRecyclerView(recyclerView);
+
+// 可选(如果觉得快速滚动不够灵敏，可以调整该数值，默认为1000，数值越小越灵敏)
+pageSnapHelper.setFlingThreshold(1000);
 ```
 
 **页面变化监听器**
@@ -87,6 +90,36 @@ mLayoutManager.setOrientationType(PagerGridLayoutManager.HORIZONTAL);
 PagerConfig.setShowLog(true);
 ```
 
+### 4.3 滚动到指定条目、指定页面
+
+```java
+// PagerGridLayoutManager 新增方法
+// 滚动到指定条目
+public void scrollToPosition(int position);
+// 滚动到指定页面
+public void scrollToPage(int pageIndex);
+// 上一页
+public void prePage();
+// 下一页
+public void nextPage();
+```
+
+其中滚动到指定条目可以调用 RecyclerView 的方法，也可以调用 LayoutManager的方法：
+
+```java
+// 下面两个方法是等价的
+mRecyclerView.scrollToPosition(0);
+mLayoutManager.scrollToPosition(0);
+```
+
+滚动到指定页面、上一页下一页等操作属于 PagerGridLayoutManager 特有方法，只能通过 PagerGridLayoutManager 调用：
+
+```java
+mPagerGridLayoutManager.scrollToPage(0);
+mPagerGridLayoutManager.prePage();
+mPagerGridLayoutManager.nextPage();
+```
+
 
 
 ## 5. 注意事项：
@@ -117,7 +150,7 @@ allprojects {
 // 1.x
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.0@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.1@aar'
 ```
 
 ## 7. 待优化
@@ -134,6 +167,13 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.0@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.2.1
+
+修复直接滚动到指定页面的Bug。  
+添加设置快速滚动阀值的方法 `snapHelper.setFlingThreshold(1000);`  
+修复不设置页面监听器会导致显示不正常的问题。
+修复行列为1时滚动出现的问题。
 
 #### v2.2.0
 

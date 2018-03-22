@@ -63,7 +63,8 @@ public class PagerGridSnapHelper extends SnapHelper {
      * @param targetView    目标控件
      * @return 需要滚动的距离
      */
-    @Nullable @Override
+    @Nullable
+    @Override
     public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager,
                                               @NonNull View targetView) {
         int pos = layoutManager.getPosition(targetView);
@@ -82,7 +83,9 @@ public class PagerGridSnapHelper extends SnapHelper {
      * @param layoutManager 布局管理器
      * @return 目标控件
      */
-    @Nullable @Override public View findSnapView(RecyclerView.LayoutManager layoutManager) {
+    @Nullable
+    @Override
+    public View findSnapView(RecyclerView.LayoutManager layoutManager) {
         if (layoutManager instanceof PagerGridLayoutManager) {
             PagerGridLayoutManager manager = (PagerGridLayoutManager) layoutManager;
             return manager.findSnapView();
@@ -190,7 +193,7 @@ public class PagerGridSnapHelper extends SnapHelper {
             @Override
             protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
                 int[] snapDistances = calculateDistanceToFinalSnap(mRecyclerView.getLayoutManager(),
-                                                                   targetView);
+                        targetView);
                 final int dx = snapDistances[0];
                 final int dy = snapDistances[1];
                 Logi("dx = " + dx);
@@ -206,6 +209,16 @@ public class PagerGridSnapHelper extends SnapHelper {
                 return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
             }
         };
+    }
+
+    //--- 公开方法 ----------------------------------------------------------------------------------
+
+    /**
+     * 设置滚动阀值
+     * @param threshold 滚动阀值
+     */
+    public void setFlingThreshold(int threshold) {
+        mThreshold = threshold;
     }
 
     //--- 处理日志 ----------------------------------------------------------------------------------
