@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     private TextView mPageTotal;        // 总页数
     private TextView mPageCurrent;      // 当前页数
 
+    private int mTotal = 0;
+    private int mCurrent = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,11 +97,13 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     }
 
     @Override public void onPageSizeChanged(int pageSize) {
+        mTotal = pageSize;
         Log.e("TAG", "总页数 = " + pageSize);
         mPageTotal.setText("共 " + pageSize + " 页");
     }
 
     @Override public void onPageSelect(int pageIndex) {
+        mCurrent = pageIndex;
         Log.e("TAG", "选中页码 = " + pageIndex);
         mPageCurrent.setText("第 " + (pageIndex + 1) + " 页");
     }
@@ -139,10 +144,18 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     }
 
     public void prePage(View view) {
-        mLayoutManager.prePage();
+        mLayoutManager.smoothPrePage(mRecyclerView);
     }
 
     public void nextPage(View view) {
-        mLayoutManager.nextPage();
+        mLayoutManager.smoothNextPage(mRecyclerView);
+    }
+
+    public void firstPage(View view) {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    public void lastPage(View view) {
+        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount()-1);
     }
 }

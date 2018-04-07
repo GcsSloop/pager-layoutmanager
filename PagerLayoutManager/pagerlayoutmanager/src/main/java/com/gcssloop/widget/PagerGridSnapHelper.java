@@ -28,10 +28,10 @@ import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 
-import static android.content.ContentValues.TAG;
+import static com.gcssloop.widget.PagerConfig.Loge;
+import static com.gcssloop.widget.PagerConfig.Logi;
 
 /**
  * 作用：分页居中工具
@@ -39,9 +39,7 @@ import static android.content.ContentValues.TAG;
  * 摘要：每次只滚动一个页面
  */
 public class PagerGridSnapHelper extends SnapHelper {
-    private static final float MILLISECONDS_PER_INCH = 60f; // 影响滚动速度，数值越大，速度越慢
     private RecyclerView mRecyclerView;                     // RecyclerView
-    private int mThreshold = 1000;                          // 阀值，滚动速度超过该阀值才会触发滚动
 
     /**
      * 用于将滚动工具和 Recycler 绑定
@@ -110,15 +108,15 @@ public class PagerGridSnapHelper extends SnapHelper {
         if (null != layoutManager && layoutManager instanceof PagerGridLayoutManager) {
             PagerGridLayoutManager manager = (PagerGridLayoutManager) layoutManager;
             if (manager.canScrollHorizontally()) {
-                if (velocityX > mThreshold) {
+                if (velocityX > PagerConfig.getFlingThreshold()) {
                     target = manager.findNextPageFirstPos();
-                } else if (velocityX < -mThreshold) {
+                } else if (velocityX < -PagerConfig.getFlingThreshold()) {
                     target = manager.findPrePageFirstPos();
                 }
             } else if (manager.canScrollVertically()) {
-                if (velocityY > mThreshold) {
+                if (velocityY > PagerConfig.getFlingThreshold()) {
                     target = manager.findNextPageFirstPos();
-                } else if (velocityY < -mThreshold) {
+                } else if (velocityY < -PagerConfig.getFlingThreshold()) {
                     target = manager.findPrePageFirstPos();
                 }
             }
@@ -144,7 +142,7 @@ public class PagerGridSnapHelper extends SnapHelper {
         if (adapter == null) {
             return false;
         }
-        int minFlingVelocity = mThreshold;
+        int minFlingVelocity = PagerConfig.getFlingThreshold();
         Loge("minFlingVelocity = " + minFlingVelocity);
         return (Math.abs(velocityY) > minFlingVelocity || Math.abs(velocityX) > minFlingVelocity)
                 && snapFromFling(layoutManager, velocityX, velocityY);
@@ -198,7 +196,7 @@ public class PagerGridSnapHelper extends SnapHelper {
                 final int dy = snapDistances[1];
                 Logi("dx = " + dx);
                 Logi("dy = " + dy);
-                final int time = calculateTimeForDeceleration(Math.max(Math.abs(dx), Math.abs(dy)));
+                final int time = calculateTimeForScrolling(Math.max(Math.abs(dx), Math.abs(dy)));
                 if (time > 0) {
                     action.update(dx, dy, time, mDecelerateInterpolator);
                 }
@@ -206,7 +204,7 @@ public class PagerGridSnapHelper extends SnapHelper {
 
             @Override
             protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                return MILLISECONDS_PER_INCH / displayMetrics.densityDpi;
+                return PagerConfig.getMillisecondsPreInch() / displayMetrics.densityDpi;
             }
         };
     }
@@ -218,18 +216,6 @@ public class PagerGridSnapHelper extends SnapHelper {
      * @param threshold 滚动阀值
      */
     public void setFlingThreshold(int threshold) {
-        mThreshold = threshold;
-    }
-
-    //--- 处理日志 ----------------------------------------------------------------------------------
-
-    private void Logi(String msg) {
-        if (!PagerConfig.isShowLog()) return;
-        Log.i(TAG, msg);
-    }
-
-    private void Loge(String msg) {
-        if (!PagerConfig.isShowLog()) return;
-        Log.e(TAG, msg);
+        PagerConfig.setFlingThreshold(threshold);
     }
 }

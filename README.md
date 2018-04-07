@@ -1,11 +1,12 @@
 # PagerLayoutManager
 
-具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，请选择性使用。
+具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，并不能适用于所有场景，请选择性使用。
 
 ## 1. 效果预览
 
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcwxgzzxg308c0epkjl.gif)
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcxtsxi2g308c0epb29.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fq3xnpt8fhg308c0e6jwo.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcpnh4wzg308c0ep1kz.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcq86gyqg308c0epb2a.gif)
 
 ## 2. 支持的特性
 
@@ -16,7 +17,7 @@
 - [x] 支持电视，支持TV上按键翻页。
 - [x] 内存稳定，不会因为一次性添加大量的数据导致内存飙升或者严重卡顿。
 - [x] 使用简单，无侵入性，可以快速的将其他布局替换为该布局，也可以快速的移除该布局。
-- [x] 自动修正，当滚动到第3页，删除数据后内容只够2页，会自动修正当前页面为第2页。
+- [x] 自动修正，当滚动到第3页，删除数据后内容不足2页，会自动修正当前页面为第2页。
 
 ## 3. 主要文件
 
@@ -71,6 +72,11 @@ pageSnapHelper.setFlingThreshold(1000);
 ```java
 // 如果不想在滚动个过程中回调页码变化，可以这样设置(v1.1.0-beta 以上版本支持)
 layoutManager.setChangeSelectInScrolling(false);
+
+// 是否允许连续滚动
+boolean isAllowContinuousScroll();
+// 设置是否允许连续滚动
+void setAllowContinuousScroll(boolean allowContinuousScroll);
 ```
 
 **切换滚动方向**
@@ -89,6 +95,8 @@ PagerConfig.setShowLog(true);
 ```
 
 ### 4.3 滚动到指定条目、指定页面
+
+**直接滚动：**
 
 ```java
 // PagerGridLayoutManager 新增方法
@@ -118,8 +126,19 @@ mPagerGridLayoutManager.prePage();
 mPagerGridLayoutManager.nextPage();
 ```
 
+**平滑滚动：**
 
+```java
+// 平滑滚动到指定条目，通过 RecyclerView 调用
+mRecyclerView.smoothScrollToPosition(pos);
 
+// 平滑滚动到上一页
+mPagerLyoutManager.smoothPrePage(recyclerView);
+// 平滑滚动到下一页
+mPagerLyoutManager.smoothNextPage(recyclerView);
+// 平滑滚动到指定页
+mPagerLyoutManager.smoothScrollToPage(recyclerView, pageIndex);
+```
 ## 5. 注意事项：
 
 目前存在一个问题，使用的时候请务必给 RecyclerView 设置固定大小或者match_parent，如果不设置默认高度为 0 ，则任何内容都不会显示出来。
@@ -147,8 +166,9 @@ allprojects {
 ```groovy
 // 1.x
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
+
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.2@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.0@aar'
 ```
 
 ## 7. 待优化
@@ -165,6 +185,38 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.2.2@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.3.0
+
+添加平滑滚动，优化超长距离平滑滚动。  
+
+```java
+// 平滑滚动到指定条目，通过 RecyclerView 调用
+mRecyclerView.smoothScrollToPosition(pos);
+
+// 平滑滚动到上一页
+mPagerLyoutManager.smoothPrePage(recyclerView);
+// 平滑滚动到下一页
+mPagerLyoutManager.smoothNextPage(recyclerView);
+// 平滑滚动到指定页
+mPagerLyoutManager.smoothScrollToPage(recyclerView, pageIndex);
+```
+
+#### V2.2.4
+
+优化滚动体验。  
+新增配置选项：
+
+```java
+// 是否允许连续滚动
+boolean isAllowContinuousScroll();
+// 设置是否允许连续滚动
+void setAllowContinuousScroll(boolean allowContinuousScroll);
+```
+
+#### v2.2.3
+
+优化滚动过程中页面回调逻辑。
 
 #### v2.2.2
 
@@ -191,6 +243,13 @@ public void prePage();
 // 下一页
 public void nextPage();
 ```
+
+#### v2.1.1
+
+修复使用Glide或者Fresco可能导致布局重复刷新的问题。
+
+(判断RecyclerView.State，如果结构状态没有变化则不重新布局)
+
 #### v2.1.0
 
 修复从后向前滚动时内存占用变大的问题。

@@ -180,5 +180,27 @@
                 android:onClick="nextPage"
                 android:text="下一页"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="firstPage"
+                android:text="第一页"/>
+
+            <Button
+                style="@style/Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="lastPage"
+                android:text="最后页"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
