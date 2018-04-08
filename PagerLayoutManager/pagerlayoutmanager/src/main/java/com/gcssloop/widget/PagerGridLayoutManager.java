@@ -800,52 +800,54 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
                 scrollToPage(targetPageIndex + 3);
             }
         }
-        executeSmoothScroll(recyclerView, position);
+        executeSmoothScroll(position);
     }
 
     /**
      * 平滑滚动到指定页面
      *
-     * @param recyclerView RecyclerView
      * @param pageIndex    页面下标
      */
-    public void smoothScrollToPage(RecyclerView recyclerView, int pageIndex) {
+    public void smoothScrollToPage(int pageIndex) {
         if (pageIndex < 0 || pageIndex >= mLastPageCount) {
             Log.e(TAG, "pageIndex is outOfIndex, must in [0, " + mLastPageCount + ").");
             return;
         }
         int pos = pageIndex * mOnePageSize;
-        executeSmoothScroll(recyclerView, pos);
+        executeSmoothScroll(pos);
     }
 
     /**
      * 平滑滚动到上一页
      */
-    public void smoothPrePage(RecyclerView recyclerView) {
+    public void smoothPrePage() {
         int pageIndex = getPageIndexByOffset() - 1;
         pageIndex = pageIndex < 0 ? 0 : pageIndex;
         int pos = pageIndex * mOnePageSize;
-        executeSmoothScroll(recyclerView, pos);
+        executeSmoothScroll(pos);
     }
 
     /**
      * 平滑滚动到下一页
      */
-    public void smoothNextPage(RecyclerView recyclerView) {
+    public void smoothNextPage() {
         int pageIndex = getPageIndexByOffset() + 1;
         pageIndex = pageIndex >= mLastPageCount ? mLastPageCount : pageIndex;
         int pos = pageIndex * mOnePageSize;
-        executeSmoothScroll(recyclerView, pos);
+        executeSmoothScroll(pos);
     }
 
     /**
      * 执行平滑滚动
      *
-     * @param recyclerView RecyclerView
      * @param position     位置
      */
-    private void executeSmoothScroll(RecyclerView recyclerView, int position) {
-        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(recyclerView.getContext()) {
+    private void executeSmoothScroll(int position) {
+        if (null == mRecyclerView){
+            Log.e(TAG, "RecyclerView Not Found!");
+            return;
+        }
+        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(mRecyclerView.getContext()) {
             @Override
             protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
                 int pos = getPosition(targetView);

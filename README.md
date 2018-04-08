@@ -137,11 +137,11 @@ mPagerGridLayoutManager.nextPage();
 mRecyclerView.smoothScrollToPosition(pos);
 
 // 平滑滚动到上一页
-mPagerLyoutManager.smoothPrePage(recyclerView);
+mPagerLyoutManager.smoothPrePage();
 // 平滑滚动到下一页
-mPagerLyoutManager.smoothNextPage(recyclerView);
+mPagerLyoutManager.smoothNextPage();
 // 平滑滚动到指定页
-mPagerLyoutManager.smoothScrollToPage(recyclerView, pageIndex);
+mPagerLyoutManager.smoothScrollToPage(pageIndex);
 ```
 ## 5. 注意事项：
 
@@ -172,7 +172,7 @@ allprojects {
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.1@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.2@aar'
 ```
 
 
@@ -186,6 +186,19 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.1@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### V2.3.2
+
+调整平滑滚动对外接口。
+
+```java
+// 平滑滚动到上一页
+mPagerLyoutManager.smoothPrePage();
+// 平滑滚动到下一页
+mPagerLyoutManager.smoothNextPage();
+// 平滑滚动到指定页
+mPagerLyoutManager.smoothScrollToPage(pageIndex);
+```
 
 #### v2.3.1
 
