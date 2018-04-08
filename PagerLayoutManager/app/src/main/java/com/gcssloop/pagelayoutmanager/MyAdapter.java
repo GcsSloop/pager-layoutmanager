@@ -53,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         //   Log.i("GCS","onBindViewHolder = "+position);
         final String title = data.get(position);
         holder.tv_title.setText(title);
@@ -61,6 +61,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), "item" + title + " 被点击了", Toast.LENGTH_SHORT).show();
+                holder.tv_title.setText("G "+title);
+                notifyItemChanged(position);
             }
         });
     }

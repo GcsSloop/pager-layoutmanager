@@ -172,13 +172,10 @@ allprojects {
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.0@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.1@aar'
 ```
 
-## 7. 待优化
 
-- [x] 添加 scrollToPosition。
-- [ ] 添加设置滚动速度。
 
 ## 作者简介
 
@@ -189,6 +186,11 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.0@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.3.1
+
+优化直接滚动。  
+修复更新单个条目导致整个界面刷新的情况。
 
 #### v2.3.0
 

@@ -144,10 +144,18 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     }
 
     public void prePage(View view) {
-        mLayoutManager.smoothPrePage(mRecyclerView);
+        mLayoutManager.prePage();
     }
 
     public void nextPage(View view) {
+        mLayoutManager.nextPage();
+    }
+
+    public void smoothPrePage(View view) {
+        mLayoutManager.smoothPrePage(mRecyclerView);
+    }
+
+    public void smoothNextPage(View view) {
         mLayoutManager.smoothNextPage(mRecyclerView);
     }
 
@@ -158,4 +166,5 @@ public class MainActivity extends AppCompatActivity implements PagerGridLayoutMa
     public void lastPage(View view) {
         mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount()-1);
     }
+
 }
