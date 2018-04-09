@@ -103,7 +103,7 @@ public class PagerGridSnapHelper extends SnapHelper {
     @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager,
                                       int velocityX, int velocityY) {
-        int target = 0;
+        int target = RecyclerView.NO_POSITION;
         Loge("findTargetSnapPosition, velocityX = " + velocityX + ", velocityY" + velocityY);
         if (null != layoutManager && layoutManager instanceof PagerGridLayoutManager) {
             PagerGridLayoutManager manager = (PagerGridLayoutManager) layoutManager;

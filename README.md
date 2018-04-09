@@ -1,16 +1,16 @@
 # PagerLayoutManager
 
-具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，并不能适用于所有场景，请选择性使用。
+具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，请选择性使用。
 
-* [【网格分页布局源码解析(上)】](https://xiaozhuanlan.com/topic/5841730926)
+- [【网格分页布局源码解析(上)】](https://xiaozhuanlan.com/topic/5841730926)
 
 ## 1. 效果预览
 
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fq3xnpt8fhg308c0e6jwo.gif)
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fq3xxgvf7lg308c0e6juv.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fq3xnpt8fhg308c0e6jwo.gif) ![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fq3xxgvf7lg308c0e6juv.gif)
 
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcpnh4wzg308c0ep1kz.gif)
-![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcq86gyqg308c0epb2a.gif)
+![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcpnh4wzg308c0ep1kz.gif) ![](http://ww1.sinaimg.cn/large/005Xtdi2gy1fkjcq86gyqg308c0epb2a.gif)
+
+
 
 ## 2. 支持的特性
 
@@ -23,6 +23,8 @@
 - [x] 使用简单，无侵入性，可以快速的将其他布局替换为该布局，也可以快速的移除该布局。
 - [x] 自动修正，当滚动到第3页，删除数据后内容不足2页，会自动修正当前页面为第2页。
 
+
+
 ## 3. 主要文件
 
 | 名称                                | 作用                |
@@ -31,33 +33,34 @@
 | /java/PagerGridSnapHelper.java    | 滚动辅助工具。           |
 | /java/PagerConfig.java            | Pager配置，用于开关调试日志。 |
 
+
+
 ## 4. 使用方法
 
 ### 4.1 基本用法
 
-**注意：**
-
-**1. 一定要在先设置 PagerGridLayoutManager， 之后再设置 PagerGridSnapHelper。**  
-**2. 注意名称 PagerGridSnapHelper 不是 PagerSnapHelper。**
+#### 4.1.1 基本设置
 
 ```java
 // 1.水平分页布局管理器
 PagerGridLayoutManager layoutManager = new PagerGridLayoutManager(
         2, 3, PagerGridLayoutManager.VERTICAL);
-layoutManager.setPageListener(this);    // 设置页面变化监听器
 recyclerView.setLayoutManager(layoutManager);
 
 // 2.设置滚动辅助工具
 PagerGridSnapHelper pageSnapHelper = new PagerGridSnapHelper();
 pageSnapHelper.attachToRecyclerView(recyclerView);
-
-// 可选(如果觉得快速滚动不够灵敏，可以调整该数值，默认为1000，数值越小越灵敏)
-pageSnapHelper.setFlingThreshold(1000);
 ```
 
-**页面变化监听器**
+**注意：**  
+**1. 一定要在先设置 PagerGridLayoutManager， 之后再设置 PagerGridSnapHelper。**  
+**2. 注意名称是 PagerGridSnapHelper 不是 PagerSnapHelper。**
+
+#### 4.1.2 设置页面变化监听器
 
 ```java
+layoutManager.setPageListener(this);    // 设置页面变化监听器
+
 // 当总页数确定时的回调
 @Override public void onPageSizeChanged(int pageSize) {
     Log.e("TAG", "总页数 = " + pageSize);
@@ -69,80 +72,111 @@ pageSnapHelper.setFlingThreshold(1000);
 }
 ```
 
-### 4.2 其他设置
-
-**是否在滚动过程中回调页码变化。**
+#### 4.1.3 直接滚动
 
 ```java
-// 如果不想在滚动个过程中回调页码变化，可以这样设置(v1.1.0-beta 以上版本支持)
-layoutManager.setChangeSelectInScrolling(false);
+// 滚动到指定条目
+public void scrollToPosition(int position);
+// 切换页面
+public void scrollToPage(int pageIndex);	// 滚动到指定页面
+public void prePage();						// 上一页
+public void nextPage();						// 下一页
 
+// 使用示例
+recyclerView.scrollToPosition(0);
+layoutManager.scrollToPage(0);
+layoutManager.prePage();
+layoutManager.nextPage();
+```
+
+#### 4.1.4 平滑滚动
+
+```java
+// 平滑滚动到指定条目
+mRecyclerView.smoothScrollToPosition(pos);
+// 平滑切换页面
+mPagerLyoutManager.smoothScrollToPage(pageIndex);	// 平滑滚动到指定页
+mPagerLyoutManager.smoothPrePage();					// 平滑滚动到上一页
+mPagerLyoutManager.smoothNextPage();				// 平滑滚动到下一页
+
+// 使用示例
+recyclerView.smoothScrollToPosition(0);
+layoutManager.smoothScrollToPage(0);
+layoutManager.smoothPrePage();
+layoutManager.smoothNextPage();
+```
+
+### 4.2 其他设置
+
+#### 4.2.1 是否在滚动过程中回调页码变化
+
+```java
+// 设置是否在滚动过程中回调页码变化
+void setChangeSelectInScrolling(boolean changeSelectInScrolling);
+
+// 使用示例
+layoutManager.setChangeSelectInScrolling(false);
+```
+
+#### 4.2.2 是否允许连续滚动
+
+默认允许连续滚动。
+
+```java
 // 是否允许连续滚动
 boolean isAllowContinuousScroll();
 // 设置是否允许连续滚动
 void setAllowContinuousScroll(boolean allowContinuousScroll);
+
+// 使用示例
+layoutManager.isAllowContinuousScroll();
+layoutManager.setAllowContinuousScroll(false);
 ```
 
-**切换滚动方向**
+#### 4.2.3 设置滚动方向
 
 注意：滚动过程中不可切换方向，设置无效。
 
 ```java
-mLayoutManager.setOrientationType(PagerGridLayoutManager.HORIZONTAL);
+// 设置滚动方向
+int setOrientationType(@OrientationType int orientation);
+
+// 使用示例
+layoutManager.setOrientationType(PagerGridLayoutManager.HORIZONTAL);
 ```
 
-**打开调试日志。**
+#### 4.2.4 设置 Fling 阀值
 
 ```java
-// 如果需要查看调试日志可以设置为true，一般情况忽略即可
+// 设置 Fling 阀值
+void setFlingThreshold(int flingThreshold);
+
+// 使用示例
+PagerConfig.setFlingThreshold(1000);
+```
+
+#### 4.2.5 设置滚动速度
+
+```java
+// 设置滚动速度(滚动一英寸所耗费的微秒数，数值越大，速度越慢，默认为 60f)
+void setMillisecondsPreInch(float millisecondsPreInch);
+
+// 使用示例
+PagerConfig.setMillisecondsPreInch(60f);
+```
+
+#### 4.2.6 打开调试日志
+
+```java
+// 打开调试用日志输出，一般情况忽略即可
+void setShowLog(boolean showLog);
+
+// 使用示例
 PagerConfig.setShowLog(true);
 ```
 
-### 4.3 滚动到指定条目、指定页面
 
-**直接滚动：**
 
-```java
-// PagerGridLayoutManager 新增方法
-// 滚动到指定条目
-public void scrollToPosition(int position);
-// 滚动到指定页面
-public void scrollToPage(int pageIndex);
-// 上一页
-public void prePage();
-// 下一页
-public void nextPage();
-```
-
-其中滚动到指定条目可以调用 RecyclerView 的方法，也可以调用 LayoutManager的方法：
-
-```java
-// 下面两个方法是等价的
-mRecyclerView.scrollToPosition(0);
-mLayoutManager.scrollToPosition(0);
-```
-
-滚动到指定页面、上一页下一页等操作属于 PagerGridLayoutManager 特有方法，只能通过 PagerGridLayoutManager 调用：
-
-```java
-mPagerGridLayoutManager.scrollToPage(0);
-mPagerGridLayoutManager.prePage();
-mPagerGridLayoutManager.nextPage();
-```
-
-**平滑滚动：**
-
-```java
-// 平滑滚动到指定条目，通过 RecyclerView 调用
-mRecyclerView.smoothScrollToPosition(pos);
-
-// 平滑滚动到上一页
-mPagerLyoutManager.smoothPrePage();
-// 平滑滚动到下一页
-mPagerLyoutManager.smoothNextPage();
-// 平滑滚动到指定页
-mPagerLyoutManager.smoothScrollToPage(pageIndex);
-```
 ## 5. 注意事项：
 
 目前存在一个问题，使用的时候请务必给 RecyclerView 设置固定大小或者match_parent，如果不设置默认高度为 0 ，则任何内容都不会显示出来。
@@ -172,7 +206,7 @@ allprojects {
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.2@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.4@aar'
 ```
 
 
@@ -187,11 +221,21 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.2@aar'
 
 ## 更新日志
 
+#### V2.3.4
+
+修复 padding 问题。  
+优化计算显示区域的代码逻辑。
+
+#### V2.3.3
+
+优化代码结构。  
+移除冗余代码。
+
 #### V2.3.2
 
 调整平滑滚动对外接口。
 
-```java
+```Java
 // 平滑滚动到上一页
 mPagerLyoutManager.smoothPrePage();
 // 平滑滚动到下一页
