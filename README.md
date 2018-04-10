@@ -206,7 +206,7 @@ allprojects {
 compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
 
 // 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.4@aar'
+compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.5@aar'
 ```
 
 
@@ -220,6 +220,10 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.4@aar'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### V2.3.5
+
+优化代码结构，抽取 PagerGridSmoothScroller。
 
 #### V2.3.4
 

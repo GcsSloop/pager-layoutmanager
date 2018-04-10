@@ -27,11 +27,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import static com.gcssloop.widget.PagerConfig.Loge;
-import static com.gcssloop.widget.PagerConfig.Logi;
 
 /**
  * 作用：分页居中工具
@@ -187,26 +185,7 @@ public class PagerGridSnapHelper extends SnapHelper {
         if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
             return null;
         }
-        return new LinearSmoothScroller(mRecyclerView.getContext()) {
-            @Override
-            protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
-                int[] snapDistances = calculateDistanceToFinalSnap(mRecyclerView.getLayoutManager(),
-                        targetView);
-                final int dx = snapDistances[0];
-                final int dy = snapDistances[1];
-                Logi("dx = " + dx);
-                Logi("dy = " + dy);
-                final int time = calculateTimeForScrolling(Math.max(Math.abs(dx), Math.abs(dy)));
-                if (time > 0) {
-                    action.update(dx, dy, time, mDecelerateInterpolator);
-                }
-            }
-
-            @Override
-            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                return PagerConfig.getMillisecondsPreInch() / displayMetrics.densityDpi;
-            }
-        };
+        return new PagerGridSmoothScroller(mRecyclerView);
     }
 
     //--- 公开方法 ----------------------------------------------------------------------------------

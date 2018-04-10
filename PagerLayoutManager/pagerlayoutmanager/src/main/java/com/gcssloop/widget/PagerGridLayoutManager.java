@@ -29,7 +29,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -731,18 +730,8 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        // 如果滚动到页面之间距离过大，先直接滚动到目标页面到临近页面，在使用 smoothScroll 最终滚动到目标
-        // 否则在滚动距离很大时，会导致滚动耗费的时间非常长
-        int currentPageIndex = getPageIndexByOffset();
         int targetPageIndex = getPageIndexByPos(position);
-        if (Math.abs(targetPageIndex - currentPageIndex) > 3) {
-            if (targetPageIndex > currentPageIndex) {
-                scrollToPage(targetPageIndex - 3);
-            } else if (targetPageIndex < currentPageIndex) {
-                scrollToPage(targetPageIndex + 3);
-            }
-        }
-        executeSmoothScroll(position);
+        smoothScrollToPage(targetPageIndex);
     }
 
     /**
@@ -769,46 +758,25 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
             Log.e(TAG, "pageIndex is outOfIndex, must in [0, " + mLastPageCount + ").");
             return;
         }
-        int pos = pageIndex * mOnePageSize;
-        executeSmoothScroll(pos);
-    }
-
-    /**
-     * 执行平滑滚动
-     *
-     * @param position 位置
-     */
-    private void executeSmoothScroll(int position) {
         if (null == mRecyclerView) {
             Log.e(TAG, "RecyclerView Not Found!");
             return;
         }
-        LinearSmoothScroller smoothScroller = new LinearSmoothScroller(mRecyclerView.getContext()) {
-            @Override
-            protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
-                int pos = getPosition(targetView);
-                int[] snapDistances = getSnapOffset(pos);
-                final int dx = snapDistances[0];
-                final int dy = snapDistances[1];
-                Logi("dx = " + dx);
-                Logi("dy = " + dy);
-                final int time = calculateTimeForScrolling(Math.max(Math.abs(dx), Math.abs(dy)));
-                if (time > 0) {
-                    action.update(dx, dy, time, mDecelerateInterpolator);
-                }
-            }
 
-            @Override
-            protected int calculateTimeForScrolling(int dx) {
-                Loge("calculateTimeForScrolling dx = " + dx);
-                return super.calculateTimeForScrolling(dx);
+        // 如果滚动到页面之间距离过大，先直接滚动到目标页面到临近页面，在使用 smoothScroll 最终滚动到目标
+        // 否则在滚动距离很大时，会导致滚动耗费的时间非常长
+        int currentPageIndex = getPageIndexByOffset();
+        if (Math.abs(pageIndex - currentPageIndex) > 3) {
+            if (pageIndex > currentPageIndex) {
+                scrollToPage(pageIndex - 3);
+            } else if (pageIndex < currentPageIndex) {
+                scrollToPage(pageIndex + 3);
             }
+        }
 
-            @Override
-            protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-                return PagerConfig.getMillisecondsPreInch() / displayMetrics.densityDpi;
-            }
-        };
+        // 具体执行滚动
+        LinearSmoothScroller smoothScroller = new PagerGridSmoothScroller(mRecyclerView);
+        int position = pageIndex * mOnePageSize;
         smoothScroller.setTargetPosition(position);
         startSmoothScroll(smoothScroller);
     }

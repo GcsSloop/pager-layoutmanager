@@ -29,6 +29,7 @@
     android:background="@drawable/pic">
 
     <ImageView
+        android:focusable="true"
         android:src="@drawable/pic"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
