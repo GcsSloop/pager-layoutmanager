@@ -30,6 +30,11 @@ import android.view.View;
 
 import static com.gcssloop.widget.PagerConfig.Logi;
 
+/**
+ * 作用：用于处理平滑滚动
+ * 作者：GcsSloop
+ * 摘要：用于用户手指抬起后页面对齐或者 Fling 事件。
+ */
 public class PagerGridSmoothScroller extends LinearSmoothScroller {
     private RecyclerView mRecyclerView;
 
@@ -42,7 +47,7 @@ public class PagerGridSmoothScroller extends LinearSmoothScroller {
     protected void onTargetFound(View targetView, RecyclerView.State state, Action action) {
         RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
         if (null == manager) return;
-        if (manager instanceof PagerGridLayoutManager){
+        if (manager instanceof PagerGridLayoutManager) {
             PagerGridLayoutManager layoutManager = (PagerGridLayoutManager) manager;
             int pos = mRecyclerView.getChildAdapterPosition(targetView);
             int[] snapDistances = layoutManager.getSnapOffset(pos);

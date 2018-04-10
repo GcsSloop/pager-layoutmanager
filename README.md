@@ -2,7 +2,7 @@
 
 具有分页功能的 Recyclerview 布局管理器，主打分页，可以替代部分场景下的网格布局，线性布局，以及一些简单的ViewPager，但也有一定的局限性，请选择性使用。
 
-<a href="https://xiaozhuanlan.com/topic/5841730926" target="_blank">【网格分页布局源码解析(上)】</a>
+- [【网格分页布局源码解析(上)】](https://xiaozhuanlan.com/topic/5841730926)
 
 ## 1. 效果预览
 
@@ -23,14 +23,12 @@
 - [x] 使用简单，无侵入性，可以快速的将其他布局替换为该布局，也可以快速的移除该布局。
 - [x] 自动修正，当滚动到第3页，删除数据后内容不足2页，会自动修正当前页面为第2页。
 
-
-
 ## 3. 主要文件
 
-| 名称                                | 作用                |
-| --------------------------------- | ----------------- |
+| 名称                              | 作用                          |
+| --------------------------------- | ----------------------------- |
 | /java/PagerGridLayoutManager.java | 水平分页网格布局管理器。      |
-| /java/PagerGridSnapHelper.java    | 滚动辅助工具。           |
+| /java/PagerGridSnapHelper.java    | 滚动辅助工具。                |
 | /java/PagerConfig.java            | Pager配置，用于开关调试日志。 |
 
 
@@ -202,11 +200,7 @@ allprojects {
 在需要添加依赖的 Module 下添加以下信息，使用方式和普通的远程仓库一样。
 
 ```groovy
-// 1.x
-compile 'com.gcssloop.support:pagerlayoutmanager:1.3.1@aar'
-
-// 2.x
-compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.5@aar'
+implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.7'
 ```
 
 
@@ -221,25 +215,34 @@ compile 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.5@aar'
 
 ## 更新日志
 
-#### V2.3.5
+#### v2.3.7
+
+完善代码细节，移除冗余逻辑。
+
+#### v2.3.6
+
+降低最低版本兼容。  
+完善文档注释，精简项目结构。
+
+#### v2.3.5
 
 优化代码结构，抽取 PagerGridSmoothScroller。
 
-#### V2.3.4
+#### v2.3.4
 
 修复 padding 问题。  
 优化计算显示区域的代码逻辑。
 
-#### V2.3.3
+#### v2.3.3
 
 优化代码结构。  
 移除冗余代码。
 
-#### V2.3.2
+#### v2.3.2
 
 调整平滑滚动对外接口。
 
-```Java
+```java
 // 平滑滚动到上一页
 mPagerLyoutManager.smoothPrePage();
 // 平滑滚动到下一页
@@ -420,3 +423,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+

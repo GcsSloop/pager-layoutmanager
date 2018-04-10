@@ -783,18 +783,9 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
 
     //=== 直接滚动 ===
 
-    /**
-     * 滚动到指定条目
-     *
-     * @param position 条目位置
-     */
     @Override
     public void scrollToPosition(int position) {
-        if (position < 0 || position >= getItemCount()) {
-            Log.e(TAG, "position = " + position + " is out of bounds, mast in [0, " + getItemCount() + ")");
-            return;
-        }
-        int pageIndex = position / mOnePageSize;
+        int pageIndex = getPageIndexByPos(position);
         scrollToPage(pageIndex);
     }
 
