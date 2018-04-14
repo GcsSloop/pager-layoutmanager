@@ -35,6 +35,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static android.view.View.MeasureSpec.EXACTLY;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static com.gcssloop.widget.PagerConfig.Loge;
 import static com.gcssloop.widget.PagerConfig.Logi;
 
@@ -502,6 +504,34 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    /**
+     * 处理测量逻辑
+     *
+     * @param recycler          RecyclerView
+     * @param state             状态
+     * @param widthMeasureSpec  宽度属性
+     * @param heightMeasureSpec 高估属性
+     */
+    @Override
+    public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(recycler, state, widthMeasureSpec, heightMeasureSpec);
+        int widthsize = View.MeasureSpec.getSize(widthMeasureSpec);      //取出宽度的确切数值
+        int widthmode = View.MeasureSpec.getMode(widthMeasureSpec);      //取出宽度的测量模式
+
+        int heightsize = View.MeasureSpec.getSize(heightMeasureSpec);    //取出高度的确切数值
+        int heightmode = View.MeasureSpec.getMode(heightMeasureSpec);    //取出高度的测量模式
+
+        // 将 wrap_content 转换为 match_parent
+        if (widthmode != EXACTLY && widthsize > 0) {
+            widthmode = EXACTLY;
+        }
+        if (heightmode != EXACTLY && heightsize > 0) {
+            heightmode = EXACTLY;
+        }
+        setMeasuredDimension(View.MeasureSpec.makeMeasureSpec(widthsize, widthmode),
+                View.MeasureSpec.makeMeasureSpec(heightsize, heightmode));
     }
 
     /**

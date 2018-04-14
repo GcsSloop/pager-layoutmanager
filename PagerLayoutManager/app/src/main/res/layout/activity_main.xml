@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 GcsSloop
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +20,7 @@
   ~ WebSite: http://www.gcssloop.com
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,17 +29,23 @@
     android:orientation="vertical"
     tools:context="com.gcssloop.pagelayoutmanager.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:padding="6dp"
-        android:id="@+id/recycler_view"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp" />
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#221510"/>
+        android:background="#221510" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,12 +60,12 @@
             android:gravity="center"
             android:text="共 100 页"
             android:textColor="#221510"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="24dp"
-            android:background="#221510"/>
+            android:background="#221510" />
 
         <TextView
             android:id="@+id/page_current"
@@ -71,14 +75,13 @@
             android:gravity="center"
             android:text="第 0 页"
             android:textColor="#221510"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#221510"/>
+        android:background="#221510" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,8 +100,7 @@
                 android:gravity="center"
                 android:text="布局方向："
                 android:textColor="#221510"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
 
             <RadioGroup
                 android:id="@+id/orientation_type"
@@ -114,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="横向"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
                 <RadioButton
                     android:id="@+id/type_vertical"
@@ -122,14 +124,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="竖向"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
             </RadioGroup>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#221510"/>
+            android:background="#221510" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -142,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="addOne"
-                android:text="从头添加1条"/>
+                android:text="从头添加1条" />
 
             <Button
                 style="@style/Button"
@@ -150,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="removeOne"
-                android:text="从头删除1条"/>
+                android:text="从头删除1条" />
         </LinearLayout>
 
         <Button
@@ -158,7 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="addMore"
-            android:text="追加5条"/>
+            android:text="追加5条" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -171,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="prePage"
-                android:text="上一页"/>
+                android:text="上一页" />
 
             <Button
                 style="@style/Button"
@@ -179,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="nextPage"
-                android:text="下一页"/>
+                android:text="下一页" />
         </LinearLayout>
 
         <LinearLayout
@@ -193,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="smoothPrePage"
-                android:text="平滑上一页"/>
+                android:text="平滑上一页" />
 
             <Button
                 style="@style/Button"
@@ -201,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="smoothNextPage"
-                android:text="平滑下一页"/>
+                android:text="平滑下一页" />
         </LinearLayout>
 
         <LinearLayout
@@ -215,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="firstPage"
-                android:text="第一页"/>
+                android:text="第一页" />
 
             <Button
                 style="@style/Button"
@@ -223,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="lastPage"
-                android:text="最后页"/>
+                android:text="最后页" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

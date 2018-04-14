@@ -201,7 +201,7 @@ allprojects {
 在需要添加依赖的 Module 下添加以下信息，使用方式和普通的远程仓库一样。
 
 ```groovy
-implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.7'
+implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.8'
 ```
 
 
@@ -215,6 +215,10 @@ implementation 'com.gcssloop.recyclerview:pagerlayoutmanager:2.3.7'
 <a href="http://www.gcssloop.com/info/about/" target="_blank"> <img src="http://ww4.sinaimg.cn/large/005Xtdi2gw1f1qn89ihu3j315o0dwwjc.jpg" width="300"/> </a>
 
 ## 更新日志
+
+#### v2.3.8
+
+修复 RecyclerView 设置为 wrap_content 时不显示(当属性为 wrap_content 时让其填充父窗体)。
 
 #### v2.3.7
 
