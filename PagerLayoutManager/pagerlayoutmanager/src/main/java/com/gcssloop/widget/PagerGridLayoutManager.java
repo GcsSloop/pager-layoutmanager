@@ -905,4 +905,39 @@ public class PagerGridLayoutManager extends RecyclerView.LayoutManager
          */
         void onPageSelect(int pageIndex);
     }
+
+    // region 解决嵌套滑动冲突
+
+    @Override
+    public int computeHorizontalScrollOffset(@NonNull RecyclerView.State state) {
+        return offsetX;
+    }
+
+    @Override
+    public int computeHorizontalScrollRange(@NonNull RecyclerView.State state) {
+        return mMaxScrollX + getUsableWidth();
+    }
+
+    @Override
+    public int computeHorizontalScrollExtent(@NonNull RecyclerView.State state) {
+        return getUsableWidth();
+    }
+
+    @Override
+    public int computeVerticalScrollOffset(@NonNull RecyclerView.State state) {
+        return offsetY;
+    }
+
+    @Override
+    public int computeVerticalScrollRange(@NonNull RecyclerView.State state) {
+        return mMaxScrollY + getUsableHeight();
+    }
+
+    @Override
+    public int computeVerticalScrollExtent(@NonNull RecyclerView.State state) {
+        return getUsableHeight();
+    }
+
+    // endregion
+    
 }
